@@ -1,59 +1,51 @@
 #!/usr/bin/python3.1
-#­*­coding: utf­8 -­*­
+# ­*­coding: utf­8 -­*­
 
 
+# joliebulle 3.6
+# Copyright (C) 2010-2016 Pierre Tavares
+# Copyright (C) 2012-2015 joliebulle's authors
+# See AUTHORS file.
 
-#joliebulle 3.6
-#Copyright (C) 2010-2016 Pierre Tavares
-#Copyright (C) 2012-2015 joliebulle's authors
-#See AUTHORS file.
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 3
+# of the License, or (at your option) any later version.
 
-#This program is free software; you can redistribute it and/or
-#modify it under the terms of the GNU General Public License
-#as published by the Free Software Foundation; either version 3
-#of the License, or (at your option) any later version.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 
-#This program is distributed in the hope that it will be useful,
-#but WITHOUT ANY WARRANTY; without even the implied warranty of
-#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#GNU General Public License for more details.
-
-#You should have received a copy of the GNU General Public License
-#along with this program; if not, write to the Free Software
-#Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 
-
-import PyQt5
-import sys
 from PyQt5 import QtWidgets
 from PyQt5 import QtCore
-from base import *
-from globals import *
-import view.base
-
-from editorH_ui import *
-import xml.etree.ElementTree as ET
-from xml.dom import minidom
-import model.constants
+from editorH_ui import Ui_Dialog
+from base import ImportBase
+from model.hop import Hop
+from view.base import getHopsQtModel
 
 
 class DialogH(QtWidgets.QDialog):
     baseChanged = QtCore.pyqtSignal()
-    def __init__(self, parent = None):
-        QtWidgets.QDialog.__init__(self,parent)
+
+    def __init__(self, parent=None):
+        QtWidgets.QDialog.__init__(self, parent)
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
         self.base = ImportBase()
-        #self.base.importBeerXML()
 
-        self.ui.listViewHoublons.setModel( view.base.getHopsQtModel() )
+        self.ui.listViewHoublons.setModel(getHopsQtModel())
         self.ui.comboBoxForme.addItem(self.tr('Feuille'))
         self.ui.comboBoxForme.addItem(self.tr('Pellet'))
         self.ui.comboBoxForme.addItem(self.tr('Cône'))
 
-        self.ui.listViewHoublons.selectionModel().currentChanged.connect(self.voir)
+        self.selectionModel = self.ui.listViewHoublons.selectionModel()
+        self.selectionModel.currentChanged.connect(self.voir)
         self.ui.pushButtonNouveau.clicked.connect(self.nouveau)
         self.ui.pushButtonEnlever.clicked.connect(self.enlever)
         self.ui.pushButtonAjouter.clicked.connect(self.ajouter)
@@ -64,12 +56,11 @@ class DialogH(QtWidgets.QDialog):
         self.ui.comboBoxForme.setEnabled(False)
         self.ui.pushButtonAjouter.setEnabled(False)
 
-
     def setModel(self):
-        self.ui.listViewHoublons.setModel( view.base.getHopsQtModel() )
-        self.ui.listViewHoublons.selectionModel().currentChanged.connect(self.voir)
+        self.ui.listViewHoublons.setModel(view.base.getHopsQtModel())
+        self.selectionModel.currentChanged.connect(self.voir)
 
-    def voir(self, current, previous) :
+    def voir(self, current, previous):
 
         self.ui.lineEditNom.setEnabled(True)
         self.ui.spinBoxAlpha.setEnabled(True)
@@ -81,32 +72,31 @@ class DialogH(QtWidgets.QDialog):
         self.ui.lineEditNom.setText(h.name)
         self.ui.spinBoxAlpha.setValue(h.alpha)
 
-        if model.constants.HOP_FORM_LEAF == h.form :
+        if model.constants.HOP_FORM_LEAF == h.form:
             self.ui.comboBoxForme.setCurrentIndex(0)
-        elif model.constants.HOP_FORM_PELLET == h.form :
+        elif model.constants.HOP_FORM_PELLET == h.form:
             self.ui.comboBoxForme.setCurrentIndex(1)
-        elif model.constants.HOP_FORM_PLUG == h.form  :
+        elif model.constants.HOP_FORM_PLUG == h.form:
             self.ui.comboBoxForme.setCurrentIndex(2)
-        else :
+        else:
             self.ui.comboBoxForme.setCurrentIndex(0)
 
-    def ajouter(self) :
+    def ajouter(self):
         h = Hop()
         h.name = self.ui.lineEditNom.text()
         h.alpha = self.ui.spinBoxAlpha.value()
-        if self.ui.comboBoxForme.currentIndex() is 0 :
+        if self.ui.comboBoxForme.currentIndex() is 0:
             h.form = model.constants.HOP_FORM_LEAF
-        elif self.ui.comboBoxForme.currentIndex() is 1 :
+        elif self.ui.comboBoxForme.currentIndex() is 1:
             h.form = model.constants.HOP_FORM_PELLET
-        elif self.ui.comboBoxForme.currentIndex() is 2 :
+        elif self.ui.comboBoxForme.currentIndex() is 2:
             h.form = model.constants.HOP_FORM_PLUG
-        else :
+        else:
             h.form = model.constants.HOP_FORM_LEAF
         ImportBase.addHop(h)
         self.setModel()
 
-
-    def nouveau(self) :
+    def nouveau(self):
         self.ui.lineEditNom.setEnabled(True)
         self.ui.spinBoxAlpha.setEnabled(True)
         self.ui.comboBoxForme.setEnabled(True)
@@ -116,12 +106,12 @@ class DialogH(QtWidgets.QDialog):
         self.ui.spinBoxAlpha.setValue(0)
         self.ui.comboBoxForme.setCurrentIndex(2)
 
-    def enlever(self) :
+    def enlever(self):
         selection = self.ui.listViewHoublons.selectionModel().selectedIndexes()
-        for index in selection :
+        for index in selection:
             h = index.data(view.constants.MODEL_DATA_ROLE)
         ImportBase().delHop(h)
         self.setModel()
 
-    def rejected(self) :
+    def rejected(self):
         self.baseChanged.emit()

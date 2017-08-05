@@ -1,26 +1,27 @@
 #!/usr/bin/python3
-#­*­coding: utf­8 -­*­
+# ­*­coding: utf­8 -­*­
 
-#joliebulle 3.6
-#Copyright (C) 2010-2016 Pierre Tavares
+# joliebulle 3.6
+# Copyright (C) 2010-2016 Pierre Tavares
 
 
-#This program is free software; you can redistribute it and/or
-#modify it under the terms of the GNU General Public License
-#as published by the Free Software Foundation; either version 3
-#of the License, or (at your option) any later version.
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 3
+# of the License, or (at your option) any later version.
 
-#This program is distributed in the hope that it will be useful,
-#but WITHOUT ANY WARRANTY; without even the implied warranty of
-#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#GNU General Public License for more details.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 
-#You should have received a copy of the GNU General Public License
-#along with this program; if not, write to the Free Software
-#Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 
 from PyQt5.QtCore import QCoreApplication
+
 
 def exportHTML():
     resultHtml = '''
@@ -66,7 +67,7 @@ input::-webkit-inner-spin-button {
 </style>
 </head>'''
 
-    resultHtml +=''' <body ng-app="tools">
+    resultHtml += ''' <body ng-app="tools">
 
     <div class="container-fluid">
 
@@ -100,11 +101,9 @@ input::-webkit-inner-spin-button {
                               </ul>
 
             </div>
-        </div>''' .format(QCoreApplication.translate("Export","Outils"), QCoreApplication.translate("Export","Correction du densimètre"), QCoreApplication.translate("Export","Assistant paliers"), QCoreApplication.translate("Export","Taux d'alcool"), QCoreApplication.translate("Export","Dilution"), QCoreApplication.translate("Export","Evaporation"), QCoreApplication.translate("Export","Décoction"), QCoreApplication.translate("Export","Densité - Plato"),QCoreApplication.translate("Export","Densité finale - Plato (avec alcool)"))
+        </div>''' .format(QCoreApplication.translate("Export", "Outils"), QCoreApplication.translate("Export", "Correction du densimètre"), QCoreApplication.translate("Export", "Assistant paliers"), QCoreApplication.translate("Export", "Taux d'alcool"), QCoreApplication.translate("Export", "Dilution"), QCoreApplication.translate("Export", "Evaporation"), QCoreApplication.translate("Export", "Décoction"), QCoreApplication.translate("Export", "Densité - Plato"), QCoreApplication.translate("Export", "Densité finale - Plato (avec alcool)"))
 
-
-
-    resultHtml+='''
+    resultHtml += '''
     <div class="main">
     <div class="row row-tools" id="gravity">
             <div ng-controller="GravityToolCtrl" class="tool-block">
@@ -136,10 +135,9 @@ input::-webkit-inner-spin-button {
                 </div>
                 </form>
             </div>
-        </div>''' .format(QCoreApplication.translate("Export","Correction du densimètre"),QCoreApplication.translate("Export","Densité mesurée"),QCoreApplication.translate("Export","Température de calibration (°C)"), QCoreApplication.translate("Export","Température mesurée (°C)"),QCoreApplication.translate("Export","Densité corrigée"), "{{calcGravity()}}")
+        </div>''' .format(QCoreApplication.translate("Export", "Correction du densimètre"), QCoreApplication.translate("Export", "Densité mesurée"), QCoreApplication.translate("Export", "Température de calibration (°C)"), QCoreApplication.translate("Export", "Température mesurée (°C)"), QCoreApplication.translate("Export", "Densité corrigée"), "{{calcGravity()}}")
 
-
-    resultHtml+='''<div class="row row-tools" id="step">
+    resultHtml += '''<div class="row row-tools" id="step">
             <div ng-controller="StepAssistantCtrl" class="tool-block">
                 <h3>{0}</h3>
                 <form class="form-horizontal" role="form">
@@ -205,11 +203,9 @@ input::-webkit-inner-spin-button {
                     </div>
                 </form>
             </div>
-        </div>''' .format(QCoreApplication.translate("Export","Assistant paliers"), QCoreApplication.translate("Export","Température cible (°C)"), QCoreApplication.translate("Export","Volume ajouté (L)"), QCoreApplication.translate("Export","Poids du grain (Kg)"),QCoreApplication.translate("Export","Température du grain (°C)"),QCoreApplication.translate("Export","Température de la maîche (°C)"),QCoreApplication.translate("Export","Volume d'eau dans la maîche (L)"),QCoreApplication.translate("Export","Facteur de correction"),QCoreApplication.translate("Export","Température de l'eau (°C)"),"{{waterTemp().temp}}",QCoreApplication.translate("Export","Ratio (L/Kg)"),"{{waterTemp().ratio}}")
+        </div>''' .format(QCoreApplication.translate("Export", "Assistant paliers"), QCoreApplication.translate("Export", "Température cible (°C)"), QCoreApplication.translate("Export", "Volume ajouté (L)"), QCoreApplication.translate("Export", "Poids du grain (Kg)"), QCoreApplication.translate("Export", "Température du grain (°C)"), QCoreApplication.translate("Export", "Température de la maîche (°C)"), QCoreApplication.translate("Export", "Volume d'eau dans la maîche (L)"), QCoreApplication.translate("Export", "Facteur de correction"), QCoreApplication.translate("Export", "Température de l'eau (°C)"), "{{waterTemp().temp}}", QCoreApplication.translate("Export", "Ratio (L/Kg)"), "{{waterTemp().ratio}}")
 
-
-
-    resultHtml+='''<div class="row row-tools" id="alc">
+    resultHtml += '''<div class="row row-tools" id="alc">
             <div ng-controller="AlcToolCtrl" class="tool-block">
                 <h3>{0}</h3>
                 <form class="form-horizontal" role="form">
@@ -245,11 +241,9 @@ input::-webkit-inner-spin-button {
                 </div>
                 </form>
             </div>
-        </div>'''.format(QCoreApplication.translate("Export","Taux d'alcool"),QCoreApplication.translate("Export","Densité initiale"),QCoreApplication.translate("Export","Densité finale"), QCoreApplication.translate("Export","Sucre ajouté (g/L)"),QCoreApplication.translate("Export","Alcool par volume (%)"),"{{calcAlcoolVol()}}",QCoreApplication.translate("Export","Atténuation apparente"), "{{calcAppAttenuation()}}")
+        </div>'''.format(QCoreApplication.translate("Export", "Taux d'alcool"), QCoreApplication.translate("Export", "Densité initiale"), QCoreApplication.translate("Export", "Densité finale"), QCoreApplication.translate("Export", "Sucre ajouté (g/L)"), QCoreApplication.translate("Export", "Alcool par volume (%)"), "{{calcAlcoolVol()}}", QCoreApplication.translate("Export", "Atténuation apparente"), "{{calcAppAttenuation()}}")
 
-
-
-    resultHtml+='''<div class="row row-tools" id="dilution">
+    resultHtml += '''<div class="row row-tools" id="dilution">
             <div ng-controller="DilutionToolCtrl" class="tool-block">
                 <h3>{0}</h3>
                 <form class="form-horizontal" role="form">
@@ -292,10 +286,9 @@ input::-webkit-inner-spin-button {
                 </div>
                 </form>
             </div>
-        </div>'''.format(QCoreApplication.translate("Export","Dilution"),QCoreApplication.translate("Export","Volume initial (L)"),QCoreApplication.translate("Export","Densité spécifique initiale"),QCoreApplication.translate("Export","Volume ajouté (L)"),QCoreApplication.translate("Export","Densité de l'ajout"),QCoreApplication.translate("Export","1 si ajout d'eau"),QCoreApplication.translate("Export","Volume final (L)"),QCoreApplication.translate("Export","Densité spécifique finale"),"{{calcDilution()}}")
+        </div>'''.format(QCoreApplication.translate("Export", "Dilution"), QCoreApplication.translate("Export", "Volume initial (L)"), QCoreApplication.translate("Export", "Densité spécifique initiale"), QCoreApplication.translate("Export", "Volume ajouté (L)"), QCoreApplication.translate("Export", "Densité de l'ajout"), QCoreApplication.translate("Export", "1 si ajout d'eau"), QCoreApplication.translate("Export", "Volume final (L)"), QCoreApplication.translate("Export", "Densité spécifique finale"), "{{calcDilution()}}")
 
-
-    resultHtml+='''<div class="row row-tools" id="boiloff">
+    resultHtml += '''<div class="row row-tools" id="boiloff">
             <div ng-controller="BoiloffToolCtrl" class="tool-block">
                 <h3>{0}</h3>
                 <form class="form-horizontal" role="form">
@@ -356,23 +349,31 @@ input::-webkit-inner-spin-button {
                 </div>
                 </form>
             </div>
-        </div>''' .format(QCoreApplication.translate("Export","Evaporation"),
-            QCoreApplication.translate("Export","Volume pré-ébullition (L)"),
-            QCoreApplication.translate("Export","Densité spécifique pré-ébullition"),
-            QCoreApplication.translate("Export","Taux d'évaporation (%/heure)"),
-            QCoreApplication.translate("Export","Durée d'ébullition (min)"),
-            QCoreApplication.translate("Export","Pertes par refroidissement (%)"),
-            QCoreApplication.translate("Export","Volume évaporé (ébullition) (L)"),
-            "{{calcBoilOff().boilOffVol}}",
-            QCoreApplication.translate("Export","Volume évaporé (refroidissement) (L)"),
-            "{{calcBoilOff().coolingLoss}}",
-            QCoreApplication.translate("Export","Volume final (L)"),
-            "{{calcBoilOff().finalVol}}",
-            QCoreApplication.translate("Export","Densité spécifique"),
-            "{{calcBoilOff().finalSg}}")
+        </div>''' .format(QCoreApplication.translate("Export", "Evaporation"),
+                          QCoreApplication.translate(
+                              "Export", "Volume pré-ébullition (L)"),
+                          QCoreApplication.translate(
+                              "Export", "Densité spécifique pré-ébullition"),
+                          QCoreApplication.translate(
+                              "Export", "Taux d'évaporation (%/heure)"),
+                          QCoreApplication.translate(
+                              "Export", "Durée d'ébullition (min)"),
+                          QCoreApplication.translate(
+                              "Export", "Pertes par refroidissement (%)"),
+                          QCoreApplication.translate(
+                              "Export", "Volume évaporé (ébullition) (L)"),
+                          "{{calcBoilOff().boilOffVol}}",
+                          QCoreApplication.translate(
+                              "Export", "Volume évaporé (refroidissement) (L)"),
+                          "{{calcBoilOff().coolingLoss}}",
+                          QCoreApplication.translate(
+                              "Export", "Volume final (L)"),
+                          "{{calcBoilOff().finalVol}}",
+                          QCoreApplication.translate(
+                              "Export", "Densité spécifique"),
+                          "{{calcBoilOff().finalSg}}")
 
-
-    resultHtml+='''<div class="row row-tools" id="decoc">
+    resultHtml += '''<div class="row row-tools" id="decoc">
             <div ng-controller="DecocToolCtrl" class="tool-block">
                 <h3>{0}</h3>
                 <form class="form-horizontal" role="form">
@@ -420,20 +421,26 @@ input::-webkit-inner-spin-button {
                 </div>
                 </form>
             </div>
-        </div>'''.format(QCoreApplication.translate("Export","Décoction"),
-            QCoreApplication.translate("Export","Volume de moût (L)"),
-            QCoreApplication.translate("Export","Température cible (°C)"),
-            QCoreApplication.translate("Export","Température de départ (°C)"),
-            QCoreApplication.translate("Export","Température d'ébullition (°C)"),
-            QCoreApplication.translate("Export","Facteur de correction (%)"),
-            QCoreApplication.translate("Export","Volume de décoction (L)"),
-            "{{calcDecoction().decocVol}}",
-            QCoreApplication.translate("Export","Fraction du moût (%)"),
-            "{{calcDecoction().fraction}}"
-            )
+        </div>'''.format(QCoreApplication.translate("Export", "Décoction"),
+                         QCoreApplication.translate(
+                             "Export", "Volume de moût (L)"),
+                         QCoreApplication.translate(
+                             "Export", "Température cible (°C)"),
+                         QCoreApplication.translate(
+                             "Export", "Température de départ (°C)"),
+                         QCoreApplication.translate(
+                             "Export", "Température d'ébullition (°C)"),
+                         QCoreApplication.translate(
+                             "Export", "Facteur de correction (%)"),
+                         QCoreApplication.translate(
+                             "Export", "Volume de décoction (L)"),
+                         "{{calcDecoction().decocVol}}",
+                         QCoreApplication.translate(
+                             "Export", "Fraction du moût (%)"),
+                         "{{calcDecoction().fraction}}"
+                         )
 
-
-    resultHtml+='''<div class="row row-tools last" id="sg">
+    resultHtml += '''<div class="row row-tools last" id="sg">
             <div ng-controller="SgPlatoToolCtrl" class="tool-block">
                 <h3>{0}</h3>
                 <form class="form-horizontal" role="form">
@@ -457,10 +464,10 @@ input::-webkit-inner-spin-button {
                 </div>
                 </form>
             </div>
-        </div>''' .format(QCoreApplication.translate("Export","Densité spécifique - Plato"),
-            QCoreApplication.translate("Export","Densité spécifique"), QCoreApplication.translate("Export","Facteur de correction"), QCoreApplication.translate("Export","Plato"))
+        </div>''' .format(QCoreApplication.translate("Export", "Densité spécifique - Plato"),
+                          QCoreApplication.translate("Export", "Densité spécifique"), QCoreApplication.translate("Export", "Facteur de correction"), QCoreApplication.translate("Export", "Plato"))
 
-    resultHtml+='''<div class="row row-tools last" id="refractoalc">
+    resultHtml += '''<div class="row row-tools last" id="refractoalc">
             <div ng-controller="RefractoAlcToolCtrl" class="tool-block">
                 <h3>{0}</h3>
                 <form class="form-horizontal" role="form">
@@ -490,21 +497,20 @@ input::-webkit-inner-spin-button {
                 </div>
                 </form>
             </div>
-        </div>'''.format(QCoreApplication.translate("Export","Densité spécifique - Plato (avec alcool)"), QCoreApplication.translate("Export","Plato (original)"), QCoreApplication.translate("Export","Plato (final)"), QCoreApplication.translate("Export","Facteur de correction"), QCoreApplication.translate("Export","Densité finale"), "{{calcFgRefracto()}}")
+        </div>'''.format(QCoreApplication.translate("Export", "Densité spécifique - Plato (avec alcool)"), QCoreApplication.translate("Export", "Plato (original)"), QCoreApplication.translate("Export", "Plato (final)"), QCoreApplication.translate("Export", "Facteur de correction"), QCoreApplication.translate("Export", "Densité finale"), "{{calcFgRefracto()}}")
 
-
-    resultHtml+='''
+    resultHtml += '''
     <!-- Fin container -->
     </div>
 
 {0}
 </body>
 </html>''' .format(
-'''            <script type="text/javascript">
+        '''            <script type="text/javascript">
                                 $(function () {
                                 $("[data-toggle='dropdown']").dropdown();
                                 });
             </script> '''
-            )
+    )
 
     return resultHtml

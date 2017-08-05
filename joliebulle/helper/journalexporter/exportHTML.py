@@ -1,28 +1,29 @@
 #!/usr/bin/python3
-#­*­coding: utf­8 -­*­
+# ­*­coding: utf­8 -­*­
 
-#joliebulle 3.6
-#Copyright (C) 2010-2016 Pierre Tavares
+# joliebulle 3.6
+# Copyright (C) 2010-2016 Pierre Tavares
 
 
-#This program is free software; you can redistribute it and/or
-#modify it under the terms of the GNU General Public License
-#as published by the Free Software Foundation; either version 3
-#of the License, or (at your option) any later version.
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 3
+# of the License, or (at your option) any later version.
 
-#This program is distributed in the hope that it will be useful,
-#but WITHOUT ANY WARRANTY; without even the implied warranty of
-#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#GNU General Public License for more details.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 
-#You should have received a copy of the GNU General Public License
-#along with this program; if not, write to the Free Software
-#Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 
 from PyQt5.QtCore import QCoreApplication
 
-def exportHTML(itemsList,newItem):
+
+def exportHTML(itemsList, newItem):
     resultHtml = '''
 <!doctype html>
 <html>
@@ -58,8 +59,7 @@ def exportHTML(itemsList,newItem):
 </style>
 </head>'''
 
-
-    resultHtml+='''<body ng-app="journal">
+    resultHtml += '''<body ng-app="journal">
 
 
     <div class="container-fluid">
@@ -106,7 +106,7 @@ def exportHTML(itemsList,newItem):
                   </div>
                   <button class="btn-link btn-xs" type="button" ng-click="saveNew(newEntryRecipe, newEntryDate, newEntryEvent); newEntry.editing = !newEntry.editing;" ng-show="newEntry.editing">{3}</button>
                 </form>
-              </div>''' .format(str(itemsList) , newItem, QCoreApplication.translate("Export","Ajouter une entrée"),QCoreApplication.translate("Export","enregistrer"))
+              </div>''' .format(str(itemsList) , newItem, QCoreApplication.translate("Export", "Ajouter une entrée"), QCoreApplication.translate("Export", "enregistrer"))
 
     resultHtml += '''<div class="row row-journal">
                 <div class="journal-list">
@@ -137,6 +137,6 @@ def exportHTML(itemsList,newItem):
 
 </script>
 </body>
-</html>''' .format("{{entry.date | date:'dd/MM/yy'}}", "{{entry.recipe}}",QCoreApplication.translate("Export","a été marquée comme"), "{{entry.event}}", QCoreApplication.translate("Export","modifier"), QCoreApplication.translate("Export","supprimer"), QCoreApplication.translate("Export","enregistrer") )
+</html>''' .format("{{entry.date | date:'dd/MM/yy'}}", "{{entry.recipe}}", QCoreApplication.translate("Export", "a été marquée comme"), "{{entry.event}}", QCoreApplication.translate("Export", "modifier"), QCoreApplication.translate("Export", "supprimer"), QCoreApplication.translate("Export", "enregistrer") )
 
     return resultHtml

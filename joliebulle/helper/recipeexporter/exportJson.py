@@ -1,48 +1,49 @@
 #!/usr/bin/python3
-#­*­coding: utf­8 -­*­
+# ­*­coding: utf­8 -­*­
 
-#joliebulle 3.6
-#Copyright (C) 2010-2016 Pierre Tavares
+# joliebulle 3.6
+# Copyright (C) 2010-2016 Pierre Tavares
 
-#This program is free software; you can redistribute it and/or
-#modify it under the terms of the GNU General Public License
-#as published by the Free Software Foundation; either version 3
-#of the License, or (at your option) any later version.
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 3
+# of the License, or (at your option) any later version.
 
-#This program is distributed in the hope that it will be useful,
-#but WITHOUT ANY WARRANTY; without even the implied warranty of
-#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#GNU General Public License for more details.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 
-#You should have received a copy of the GNU General Public License
-#along with this program; if not, write to the Free Software
-#Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-from PyQt5.QtCore import QCoreApplication
 import json
-from view.fermentableview import *
-from view.hopview import *
-from view.yeastview import *
-from view.miscview import *
-from view.recipeview import *
-from view.mashstepview import *
-from model.constants import *
-from settings import *
+from view.fermentableview import FermentableView
+from view.hopview import HopView
+from view.yeastview import YeastView
+from view.miscview import MiscView
+from view.recipeview import RecipeView
+from view.mashstepview import MashStepView
+from model.constants import (
+    RECIPE_TYPE_ALL_GRAIN, RECIPE_TYPE_EXTRACT, RECIPE_TYPE_PARTIAL_MASH,
+    HOP_FORM_PELLET, HOP_FORM_LEAF, HOP_FORM_PLUG
+)
+from settings import Settings
 
 
-def exportJson(recipe) :
-    recipeView = RecipeView(recipe)
+def exportJson(recipe):
+    recipeView = RecipeView(recipe)  # noqa
     settings = Settings()
     data = []
     dic = {}
 
     dic['path'] = recipe.path
     dic['name'] = recipe.name
-    if recipe.brewer :
+    if recipe.brewer:
         dic['brewer'] = recipe.brewer
-    else :
+    else:
         dic['brewer'] = "anonymous"
-    # dic['type'] = recipeView.recipeTypeDisplay()
     dic['style'] = recipe.style
     if recipe.type == RECIPE_TYPE_ALL_GRAIN:
         dic['type'] = "All Grain"
@@ -53,12 +54,6 @@ def exportJson(recipe) :
     dic['volume'] = recipe.volume
     dic['boilTime'] = recipe.boil
     dic['efficiency'] = recipe.efficiency
-    # dic['ibu'] = "%.0f" %recipe.compute_IBU()
-    # dic['ebc'] = "%.0f" %recipe.compute_EBC()
-    # dic['og'] = "%.3f" %recipe.compute_OG()
-    # dic['fg'] = "%.3f" %recipe.compute_FG()
-    # dic['bugu'] = "%.2f" %recipe.compute_ratioBUGU()
-    # dic['alc'] = "%.1f" %recipe.compute_ABV()
 
     dic['grainWeight'] = recipe.compute_grainWeight()
     dic['preBoilGu'] = recipe.compute_GU_PreBoil()
@@ -69,47 +64,45 @@ def exportJson(recipe) :
     dic['fudgeFactor'] = settings.conf.value("FudgeFactor")
     dic['grainRetention'] = settings.conf.value("GrainRetention")
 
-
     hops = []
     for h in recipe.listeHops:
-        hView = HopView(h)
+        hView = HopView(h)  # noqa
         hop = {}
         hop['name'] = h.name
-        if h.form == HOP_FORM_PELLET :
+        if h.form == HOP_FORM_PELLET:
             hop['form'] = "Pellet"
-        elif h.form == HOP_FORM_LEAF :
+        elif h.form == HOP_FORM_LEAF:
             hop['form'] = "Leaf"
-        elif h.form == HOP_FORM_PLUG :
+        elif h.form == HOP_FORM_PLUG:
             hop['form'] = "Plug"
         hop['alpha'] = h.alpha
         hop['use'] = h.use
         hop['time'] = h.time
         hop['amount'] = h.amount
-        hop['ibuPart'] = "%.1f" %recipe.compute_IBUPart()[h]
+        hop['ibuPart'] = "%.1f" % recipe.compute_IBUPart()[h]
         hops.append(hop)
     dic['hops'] = hops
 
     fermentables = []
     for f in recipe.listeFermentables:
-        fView = FermentableView(f)
+        fView = FermentableView(f)  # noqa
         fermentable = {}
         fermentable['name'] = f.name
         fermentable['type'] = f.type
         fermentable['fyield'] = f.fyield
         fermentable['color'] = f.color
         fermentable['amount'] = f.amount
-        if f.useAfterBoil :
+        if f.useAfterBoil:
             fermentable['afterBoil'] = 'TRUE'
-        else :
+        else:
             fermentable['afterBoil'] = 'FALSE'
-        # fermentable['afterBoilView'] = fView.fermentableUseDisplay()
         fermentable['recoMash'] = f.recommendMash
         fermentables.append(fermentable)
     dic['fermentables'] = fermentables
 
     yeasts = []
-    for y in recipe.listeYeasts :
-        yView = YeastView(y)
+    for y in recipe.listeYeasts:
+        yView = YeastView(y)  # noqa
         yeast = {}
         yeast['name'] = y.name
         yeast['product_id'] = y.productId
@@ -120,8 +113,8 @@ def exportJson(recipe) :
     dic['yeasts'] = yeasts
 
     miscs = []
-    for m in recipe.listeMiscs :
-        mView = MiscView(m)
+    for m in recipe.listeMiscs:
+        mView = MiscView(m)  # noqa
         misc = {}
         misc['name'] = m.name
         misc['amount'] = m.amount
@@ -138,7 +131,7 @@ def exportJson(recipe) :
     mashProfile['tunTemp'] = recipe.mash.tunTemp
 
     steps = []
-    for s in recipe.mash.listeSteps :
+    for s in recipe.mash.listeSteps:
         mashStepView = MashStepView(s)
         step = {}
         step['name'] = s.name
@@ -152,9 +145,7 @@ def exportJson(recipe) :
 
     dic['notes'] = recipe.recipeNotes
 
-
     data.append(dic)
     data = json.dumps(data)
-    # data = data.replace("'","&#39;")
 
     return data

@@ -1,95 +1,96 @@
 #!/usr/bin/python3.1
-#­*­coding: utf­8 -­*­
+# ­*­coding: utf­8 -­*­
 
 
+# joliebulle 3.6
+# Copyright (C) 2010-2016 Pierre Tavares
+# Copyright (C) 2012-2015 joliebulle's authors
+# See AUTHORS file.
 
-#joliebulle 3.6
-#Copyright (C) 2010-2016 Pierre Tavares
-#Copyright (C) 2012-2015 joliebulle's authors
-#See AUTHORS file.
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 3
+# of the License, or (at your option) any later version.
 
-#This program is free software; you can redistribute it and/or
-#modify it under the terms of the GNU General Public License
-#as published by the Free Software Foundation; either version 3
-#of the License, or (at your option) any later version.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 
-#This program is distributed in the hope that it will be useful,
-#but WITHOUT ANY WARRANTY; without even the implied warranty of
-#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#GNU General Public License for more details.
-
-#You should have received a copy of the GNU General Public License
-#along with this program; if not, write to the Free Software
-#Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 
-
-import PyQt5
 import sys
 import logging
-from PyQt5 import QtCore
 import json
 import xml.etree.ElementTree as ET
-from globals import *
-from model.fermentable import *
-from model.hop import *
-from model.yeast import *
-from model.misc import *
-from model.mash import *
-from model.constants import *
+from model.fermentable import Fermentable
+from model.hop import Hop
+from model.yeast import Yeast
+from model.misc import Misc
+from model.mash import Mash
 from operator import attrgetter
 from singleton import Singleton
+from globals import database_file, mash_file
+from model.constants import HOP_FORM_PELLET, HOP_FORM_LEAF, HOP_FORM_PLUG
 
 
 logger = logging.getLogger(__name__)
 
-class ImportBase(object,metaclass=Singleton) :
+
+class ImportBase(object, metaclass=Singleton):
 
     def __init__(self):
         logger.debug("Import %s", database_file)
         fichierBeerXML = database_file
         self.arbre = ET.parse(fichierBeerXML)
 
-        presentation=self.arbre.find('.//RECIPE')
-        fermentables=self.arbre.findall('.//FERMENTABLE')
+        presentation = self.arbre.find('.//RECIPE')
+        fermentables = self.arbre.findall('.//FERMENTABLE')
         hops = self.arbre.findall('.//HOP')
         levures = self.arbre.findall('.//YEAST')
         misc = self.arbre.findall('.//MISC')
- 
-        
+
         self.listeFermentables = list()
         self.listeHops = list()
         self.listeYeasts = list()
         self.listeMiscs = list()
 
-        #Ingredient fermentescibles
+        # Ingredient fermentescibles
         for element in fermentables:
-            self.listeFermentables.append( Fermentable.parse(element) )
-        self.listeFermentables = sorted(self.listeFermentables, key=attrgetter('name'))
-        logger.debug( "%s fermentables in database, using %s bytes in memory", len(self.listeFermentables), sys.getsizeof(self.listeFermentables) )
+            self.listeFermentables.append(Fermentable.parse(element))
+        self.listeFermentables = sorted(
+            self.listeFermentables, key=attrgetter('name'))
+        logger.debug("%s fermentables in database, using %s bytes in memory",
+                     len(self.listeFermentables),
+                     sys.getsizeof(self.listeFermentables))
 
-        #Houblons
+        # Houblons
         for element in hops:
-            self.listeHops.append( Hop.parse(element) )
+            self.listeHops.append(Hop.parse(element))
         self.listeHops = sorted(self.listeHops, key=attrgetter('name'))
-        logger.debug( "%s hops in database, using %s bytes in memory", len(self.listeHops), sys.getsizeof(self.listeHops) )
+        logger.debug("%s hops in database, using %s bytes in memory",
+                     len(self.listeHops), sys.getsizeof(self.listeHops))
 
-        #Levures
+        # Levures
         for element in levures:
-            self.listeYeasts.append( Yeast.parse(element) )
+            self.listeYeasts.append(Yeast.parse(element))
         self.listeYeasts = sorted(self.listeYeasts, key=attrgetter('name'))
-        logger.debug( "%s yeasts in database, using %s bytes in memory", len(self.listeYeasts), sys.getsizeof(self.listeYeasts) )
+        logger.debug("%s yeasts in database, using %s bytes in memory", len(
+            self.listeYeasts), sys.getsizeof(self.listeYeasts))
 
-        #Ingredients divers
+        # Ingredients divers
         for element in misc:
-            self.listeMiscs.append( Misc.parse(element) )
+            self.listeMiscs.append(Misc.parse(element))
         self.listeMiscs = sorted(self.listeMiscs, key=attrgetter('name'))
-        logger.debug( "%s miscs in database, using %s bytes in memory", len(self.listeMiscs), sys.getsizeof(self.listeMiscs) )
+        logger.debug("%s miscs in database, using %s bytes in memory", len(
+            self.listeMiscs), sys.getsizeof(self.listeMiscs))
 
         logger.debug("Import %s terminé", database_file)
 
-        #Import Mash file
+        # Import Mash file
         logger.debug("Import %s", mash_file)
         arbre = ET.parse(mash_file)
 
@@ -97,21 +98,22 @@ class ImportBase(object,metaclass=Singleton) :
         self.listeMashes = list()
 
         for element in mash:
-            self.listeMashes.append( Mash.parse(element) )
-        logger.debug( "%s mash in database, using %s bytes in memory", len(self.listeMashes), sys.getsizeof(self.listeMashes) )
+            self.listeMashes.append(Mash.parse(element))
+        logger.debug("%s mash in database, using %s bytes in memory", len(
+            self.listeMashes), sys.getsizeof(self.listeMashes))
 
         logger.debug("Import %s terminé", mash_file)
 
     @staticmethod
     def __indent(elem, level=0):
-        i = "\n" + level*"  "
+        i = "\n" + level * "  "
         if len(elem):
             if not elem.text or not elem.text.strip():
                 elem.text = i + "  "
             if not elem.tail or not elem.tail.strip():
                 elem.tail = i
             for elem in elem:
-                ImportBase.__indent(elem, level+1)
+                ImportBase.__indent(elem, level + 1)
             if not elem.tail or not elem.tail.strip():
                 elem.tail = i
         else:
@@ -127,7 +129,8 @@ class ImportBase(object,metaclass=Singleton) :
     @staticmethod
     def addFermentable(f):
         ImportBase().listeFermentables.append(f)
-        ImportBase().listeFermentables = sorted(ImportBase().listeFermentables, key=attrgetter('name'))
+        ImportBase().listeFermentables = sorted(
+            ImportBase().listeFermentables, key=attrgetter('name'))
 
         root = ImportBase().arbre.getroot()
         root.append(f.toXml())
@@ -139,9 +142,14 @@ class ImportBase(object,metaclass=Singleton) :
         root = ImportBase().arbre.getroot()
         iterator = root.iter("FERMENTABLE")
         item = None
-        for elem in iterator :
+        for elem in iterator:
             tempF = Fermentable.parse(elem)
-            if f.name == tempF.name and f.type == tempF.type and f.color == tempF.color and f.recommendMash == tempF.recommendMash and f.fyield == tempF.fyield :
+            if (
+                    f.name == tempF.name and f.type == tempF.type and
+                    f.color == tempF.color and
+                    f.recommendMash == tempF.recommendMash and
+                    f.fyield == tempF.fyield
+            ):
                 item = elem
         if item is not None:
             root.remove(item)
@@ -150,7 +158,7 @@ class ImportBase(object,metaclass=Singleton) :
     @staticmethod
     def addHop(h):
         ImportBase().listeHops.append(h)
-        ImportBase().listeHops = sorted(ImportBase().listeHops, key=attrgetter('name'))
+        ImportBase().listeHops.sort(key=attrgetter('name'))
 
         root = ImportBase().arbre.getroot()
         root.append(h.toXml())
@@ -158,7 +166,6 @@ class ImportBase(object,metaclass=Singleton) :
         ImportBase().arbre._setroot(root)
         ImportBase().arbre.write(databaseXML, encoding="utf-8")
         databaseXML.close()
-        
 
     @staticmethod
     def delHop(h):
@@ -166,9 +173,12 @@ class ImportBase(object,metaclass=Singleton) :
         root = ImportBase().arbre.getroot()
         iterator = root.iter("HOP")
         item = None
-        for elem in iterator :
+        for elem in iterator:
             tempHop = Hop.parse(elem)
-            if h.name == tempHop.name and h.form == tempHop.form and h.alpha == tempHop.alpha :
+            if (
+                    h.name == tempHop.name and h.form == tempHop.form and
+                    h.alpha == tempHop.alpha
+            ):
                 item = elem
         if item is not None:
             root.remove(item)
@@ -177,7 +187,7 @@ class ImportBase(object,metaclass=Singleton) :
     @staticmethod
     def addMisc(m):
         ImportBase().listeMiscs.append(m)
-        ImportBase().listeMiscs = sorted(ImportBase().listeMiscs, key=attrgetter('name'))
+        ImportBase().listeMiscs.sort(key=attrgetter('name'))
 
         root = ImportBase().arbre.getroot()
         root.append(m.toXml())
@@ -189,7 +199,7 @@ class ImportBase(object,metaclass=Singleton) :
         root = ImportBase().arbre.getroot()
         iterator = root.iter("MISC")
         item = None
-        for elem in iterator :
+        for elem in iterator:
             tempMisc = Misc.parse(elem)
             if m.name == tempMisc.name and m.type == tempMisc.type:
                 item = elem
@@ -200,7 +210,7 @@ class ImportBase(object,metaclass=Singleton) :
     @staticmethod
     def addYeast(y):
         ImportBase().listeYeasts.append(y)
-        ImportBase().listeYeasts = sorted(ImportBase().listeYeasts, key=attrgetter('name'))
+        ImportBase().listeYeasts.sort(key=attrgetter('name'))
 
         root = ImportBase().arbre.getroot()
         root.append(y.toXml())
@@ -212,22 +222,27 @@ class ImportBase(object,metaclass=Singleton) :
         root = ImportBase().arbre.getroot()
         iterator = root.iter("YEAST")
         item = None
-        for elem in iterator :
+        for elem in iterator:
             tempYeast = Yeast.parse(elem)
-            if y.name == tempYeast.name and y.form == tempYeast.form and y.labo == tempYeast.labo and y.productId == tempYeast.productId and y.attenuation == tempYeast.attenuation :
+            if (
+                    y.name == tempYeast.name and y.form == tempYeast.form and
+                    y.labo == tempYeast.labo and
+                    y.productId == tempYeast.productId and
+                    y.attenuation == tempYeast.attenuation
+            ):
                 item = elem
         if item is not None:
             root.remove(item)
             ImportBase.save(root)
 
     @staticmethod
-    def exportjson() :
+    def exportjson():
         # data = []
-        dic ={}
+        dic = {}
 
-        fermentables=[]
-        for f in ImportBase().listeFermentables :
-            fermentable =  {}
+        fermentables = []
+        for f in ImportBase().listeFermentables:
+            fermentable = {}
             fermentable['name'] = f.name
             fermentable['color'] = f.color
             fermentable['type'] = f.type
@@ -235,22 +250,22 @@ class ImportBase(object,metaclass=Singleton) :
             fermentables.append(fermentable)
         dic['fermentables'] = fermentables
 
-        hops=[]
-        for h in ImportBase().listeHops :
-            hop={}
+        hops = []
+        for h in ImportBase().listeHops:
+            hop = {}
             hop['name'] = h.name
             hop['alpha'] = h.alpha
-            if h.form == HOP_FORM_PELLET :
+            if h.form == HOP_FORM_PELLET:
                 hop['form'] = "Pellet"
-            elif h.form == HOP_FORM_LEAF :
+            elif h.form == HOP_FORM_LEAF:
                 hop['form'] = "Leaf"
-            elif h.form == HOP_FORM_PLUG :
+            elif h.form == HOP_FORM_PLUG:
                 hop['form'] = "Plug"
             hops.append(hop)
         dic['hops'] = hops
 
-        miscs=[]
-        for m in ImportBase().listeMiscs :
+        miscs = []
+        for m in ImportBase().listeMiscs:
             misc = {}
             misc['name'] = m.name
             misc['type'] = m.type
@@ -258,8 +273,8 @@ class ImportBase(object,metaclass=Singleton) :
             miscs.append(misc)
         dic['miscs'] = miscs
 
-        yeasts=[]
-        for y in ImportBase().listeYeasts :
+        yeasts = []
+        for y in ImportBase().listeYeasts:
             yeast = {}
             yeast['name'] = y.name
             yeast['product_id'] = y.productId
@@ -271,6 +286,6 @@ class ImportBase(object,metaclass=Singleton) :
 
         # data.append(dic)
         dic = json.dumps(dic)
-        dic = dic.replace("'","&#39;")
+        dic = dic.replace("'", "&#39;")
 
         return dic

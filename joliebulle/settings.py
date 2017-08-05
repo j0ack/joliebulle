@@ -1,33 +1,25 @@
 #!/usr/bin/python3
-#­*­coding: utf­8 -­*­
+# ­*­coding: utf­8 -­*­
 
-#joliebulle 3.6
-#Copyright (C) 2010-2016 Pierre Tavares
-#Copyright (C) 2012-2015 joliebulle's authors
-#See AUTHORS file.
+# joliebulle 3.6
+# Copyright (C) 2010-2016 Pierre Tavares
+# Copyright (C) 2012-2015 joliebulle's authors
+# See AUTHORS file.
 
-#This program is distributed in the hope that it will be useful,
-#but WITHOUT ANY WARRANTY; without even the implied warranty of
-#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#GNU General Public License for more details.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 
-#You should have received a copy of the GNU General Public License
-#along with this program; if not, write to the Free Software
-#Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 
-
-import os
-from sys import platform
-import codecs
-import PyQt5
-import sys
-from PyQt5 import QtGui
 from PyQt5 import QtCore
 
 
 class Settings:
-    def __init__ (self) :
+
+    def __init__(self):
         self.conf = QtCore.QSettings("joliebulle", "joliebulle")
-        #self.conf.setValue("pathUnix", os.path.join(os.path.expanduser("~"), ".config", "joliebulle", "recettes")) 
-        #self.conf.setValue("pathWin32", os.path.join(os.path.expanduser("~"), "AppData", "Local", "joliebulle", "recettes"))

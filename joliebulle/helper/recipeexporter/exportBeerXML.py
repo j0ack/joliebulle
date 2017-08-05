@@ -1,27 +1,32 @@
 #!/usr/bin/python3
-#­*­coding: utf­8 -­*­
+# ­*­coding: utf­8 -­*­
 
-#joliebulle 3.6
-#Copyright (C) 2010-2016 Pierre Tavares
-#Copyright (C) 2012-2015 joliebulle's authors
+# joliebulle 3.6
+# Copyright (C) 2010-2016 Pierre Tavares
+# Copyright (C) 2012-2015 joliebulle's authors
 
-#This program is free software; you can redistribute it and/or
-#modify it under the terms of the GNU General Public License
-#as published by the Free Software Foundation; either version 3
-#of the License, or (at your option) any later version.
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 3
+# of the License, or (at your option) any later version.
 
-#This program is distributed in the hope that it will be useful,
-#but WITHOUT ANY WARRANTY; without even the implied warranty of
-#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#GNU General Public License for more details.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 
-#You should have received a copy of the GNU General Public License
-#along with this program; if not, write to the Free Software
-#Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 
 import xml.etree.ElementTree as ET
-from model.constants import *
+from model.constants import (
+    RECIPE_TYPE_ALL_GRAIN, RECIPE_TYPE_EXTRACT, RECIPE_TYPE_PARTIAL_MASH,
+    HOP_FORM_LEAF, HOP_FORM_PELLET, HOP_FORM_PLUG, MISC_USE_BOIL,
+    MISC_USE_BOTTLING, MISC_USE_MASH, MISC_USE_PRIMARY, MISC_USE_SECONDARY
+)
+
 
 def exportBeerXML(recipe):
     recipes = ET.Element('RECIPES')
@@ -45,24 +50,24 @@ def exportBeerXML(recipe):
     sNom.text = recipe.style
     sVersion = ET.SubElement(style, 'VERSION')
     sVersion.text = '1'
-    sCategory = ET.SubElement(style, 'CATEGORY')
-    sCategoryNumber = ET.SubElement(style, 'CATEGORY_NUMBER')
-    sStyleLetter = ET.SubElement(style, 'STYLE_LETTER')
-    sStyleGuide = ET.SubElement(style, 'STYLE_GUIDE')
+    sCategory = ET.SubElement(style, 'CATEGORY')  # noqa
+    sCategoryNumber = ET.SubElement(style, 'CATEGORY_NUMBER')  # noqa
+    sStyleLetter = ET.SubElement(style, 'STYLE_LETTER')  # noqa
+    sStyleGuide = ET.SubElement(style, 'STYLE_GUIDE')  # noqa
     sType = ET.SubElement(style, 'TYPE')
     sType.text = 'Ale'
-    sOgMin = ET.SubElement(style, 'OG_MIN')
-    sOgMax = ET.SubElement(style, 'OG_MAX')
-    sFgMin = ET.SubElement(style, 'FG_MIN')
-    sFgMax = ET.SubElement(style, 'FG_MAX')
-    sIbuMin = ET.SubElement(style, 'IBU_MIN')
-    sIbuMax = ET.SubElement(style, 'IBU_MAX')
-    sColorMin = ET.SubElement(style, 'COLOR_MIN')
-    sColorMax = ET.SubElement(style, 'COLOR_MAX')
+    sOgMin = ET.SubElement(style, 'OG_MIN')  # noqa
+    sOgMax = ET.SubElement(style, 'OG_MAX')  # noqa
+    sFgMin = ET.SubElement(style, 'FG_MIN')  # noqa
+    sFgMax = ET.SubElement(style, 'FG_MAX')  # noqa
+    sIbuMin = ET.SubElement(style, 'IBU_MIN')  # noqa
+    sIbuMax = ET.SubElement(style, 'IBU_MAX')  # noqa
+    sColorMin = ET.SubElement(style, 'COLOR_MIN')  # noqa
+    sColorMax = ET.SubElement(style, 'COLOR_MAX')  # noqa
 
     batch_size = ET.SubElement(recipeTag, 'BATCH_SIZE')
     batch_size.text = str(recipe.volume)
-    boil_size = ET.SubElement(recipeTag, 'BOIL_SIZE')
+    boil_size = ET.SubElement(recipeTag, 'BOIL_SIZE')  # noqa
     boil_time = ET.SubElement(recipeTag, 'BOIL_TIME')
     boil_time.text = str(recipe.boil)
     efficiency = ET.SubElement(recipeTag, 'EFFICIENCY')
@@ -81,13 +86,13 @@ def exportBeerXML(recipe):
         hVersion = ET.SubElement(hop, 'VERSION')
         hVersion.text = '1'
         hAmount = ET.SubElement(hop, 'AMOUNT')
-        hAmount.text = str(h.amount/1000)
+        hAmount.text = str(h.amount / 1000)
         hForm = ET.SubElement(hop, 'FORM')
-        if h.form == HOP_FORM_PELLET :
+        if h.form == HOP_FORM_PELLET:
             hForm.text = 'Pellet'
-        elif h.form == HOP_FORM_LEAF :
+        elif h.form == HOP_FORM_LEAF:
             hForm.text = 'Leaf'
-        elif h.form == HOP_FORM_PLUG :
+        elif h.form == HOP_FORM_PLUG:
             hForm.text = 'Plug'
         hTime = ET.SubElement(hop, 'TIME')
         hTime.text = str(h.time)
@@ -95,35 +100,33 @@ def exportBeerXML(recipe):
         hAlpha.text = str(h.alpha)
         hUse = ET.SubElement(hop, 'USE')
         hUse.text = h.use
-        
-        
 
     fermentables = ET.SubElement(recipeTag, 'FERMENTABLES')
     for f in recipe.listeFermentables:
         # fermentables.append(f.toXml())
         fermentable = ET.SubElement(fermentables, 'FERMENTABLE')
-        fName = ET.SubElement(fermentable,'NAME')
+        fName = ET.SubElement(fermentable, 'NAME')
         fName.text = f.name
         fVersion = ET.SubElement(fermentable, 'VERSION')
-        fVersion.text = '1'            
+        fVersion.text = '1'
         fAmount = ET.SubElement(fermentable, 'AMOUNT')
-        fAmount.text = str(f.amount/1000)
+        fAmount.text = str(f.amount / 1000)
         fType = ET.SubElement(fermentable, 'TYPE')
         fType.text = f.type
-        fYield = ET.SubElement(fermentable,'YIELD')
+        fYield = ET.SubElement(fermentable, 'YIELD')
         fYield.text = str(f.fyield)
-        fMashed = ET.SubElement(fermentable,'RECOMMEND_MASH')
+        fMashed = ET.SubElement(fermentable, 'RECOMMEND_MASH')
         if f.recommendMash:
             fMashed.text = 'TRUE'
         else:
             fMashed.text = 'FALSE'
-        fUse = ET.SubElement(fermentable,'ADD_AFTER_BOIL')
-        if f.useAfterBoil : 
+        fUse = ET.SubElement(fermentable, 'ADD_AFTER_BOIL')
+        if f.useAfterBoil:
             fUse.text = 'TRUE'
-        else :
+        else:
             fUse.text = 'FALSE'
         color = ET.SubElement(fermentable, 'COLOR')
-        color.text = str(f.color/1.97)
+        color.text = str(f.color / 1.97)
 
     miscs = ET.SubElement(recipeTag, 'MISCS')
     for m in recipe.listeMiscs:
@@ -134,23 +137,22 @@ def exportBeerXML(recipe):
         mVersion = ET.SubElement(misc, 'VERSION')
         mVersion.text = '1'
         mAmount = ET.SubElement(misc, 'AMOUNT')
-        mAmount.text = str(m.amount/1000)
+        mAmount.text = str(m.amount / 1000)
         mType = ET.SubElement(misc, 'TYPE')
         mType.text = m.type
         mTime = ET.SubElement(misc, 'TIME')
         mTime.text = str(m.time)
         mUse = ET.SubElement(misc, 'USE')
-        if m.use == MISC_USE_BOIL :
+        if m.use == MISC_USE_BOIL:
             mUse.text = 'Boil'
-        elif m.use == MISC_USE_MASH :
+        elif m.use == MISC_USE_MASH:
             mUse.text = 'Mash'
-        elif m.use == MISC_USE_PRIMARY : 
+        elif m.use == MISC_USE_PRIMARY:
             mUse.text = 'Primary'
-        elif m.use == MISC_USE_SECONDARY :
-            mUse.text = 'Secondary'  
-        elif m.use == MISC_USE_BOTTLING :
+        elif m.use == MISC_USE_SECONDARY:
+            mUse.text = 'Secondary'
+        elif m.use == MISC_USE_BOTTLING:
             mUse.text = 'Bottling'
-
 
     yeasts = ET.SubElement(recipeTag, 'YEASTS')
     for y in recipe.listeYeasts:
@@ -159,7 +161,7 @@ def exportBeerXML(recipe):
         lVersion = ET.SubElement(yeast, 'VERSION')
         lVersion.text = '1'
         lType = ET.SubElement(yeast, 'TYPE')
-        lType = 'Ale'
+        lType.text = 'Ale'
         lNom.text = y.name
         lForm = ET.SubElement(yeast, 'FORM')
         lForm.text = y.form
@@ -170,7 +172,7 @@ def exportBeerXML(recipe):
         lAtten = ET.SubElement(yeast, 'ATTENUATION')
         lAtten.text = str(y.attenuation)
 
-    waters = ET.SubElement(recipeTag, 'WATERS')
+    waters = ET.SubElement(recipeTag, 'WATERS')  # noqa
 
     mash = ET.SubElement(recipeTag, 'MASH')
     mName = ET.SubElement(mash, 'NAME')
@@ -209,6 +211,3 @@ def exportBeerXML(recipe):
         pass
 
     return ET.tostring(recipes, "unicode")
-        
-
-

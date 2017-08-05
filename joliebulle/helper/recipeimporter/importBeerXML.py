@@ -1,24 +1,24 @@
 #!/usr/bin/python3
-#­*­coding: utf­8 -­*­
+# ­*­coding: utf­8 -­*­
 
-#joliebulle 3.6
-#Copyright (C) 2010-2014 Pierre Tavares
-#Copyright (C) 2012-2013 joliebulle's authors
-#See AUTHORS file.
+# joliebulle 3.6
+# Copyright (C) 2010-2014 Pierre Tavares
+# Copyright (C) 2012-2013 joliebulle's authors
+# See AUTHORS file.
 
-#This program is free software; you can redistribute it and/or
-#modify it under the terms of the GNU General Public License
-#as published by the Free Software Foundation; either version 3
-#of the License, or (at your option) any later version.
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 3
+# of the License, or (at your option) any later version.
 
-#This program is distributed in the hope that it will be useful,
-#but WITHOUT ANY WARRANTY; without even the implied warranty of
-#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#GNU General Public License for more details.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 
-#You should have received a copy of the GNU General Public License
-#along with this program; if not, write to the Free Software
-#Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 import logging
 from xml.etree import ElementTree
@@ -40,7 +40,7 @@ def importBeerXMLRecipe(data):
         tree = ElementTree.parse(data)
     except TypeError:
         tree = data
-    except FileNotFoundError:
+    except IOError:
         tree = ElementTree.fromstring(data)
     except:
         raise
@@ -115,7 +115,7 @@ def importBeerXMLFermentable(data):
         if 'NAME' == child.tag:
             fermentable.name = child.text
         elif 'AMOUNT' == child.tag:
-            fermentable.amount = 1000*(float(child.text))
+            fermentable.amount = 1000 * (float(child.text))
         elif 'TYPE' == child.tag:
             if 'Grain' == child.text:
                 fermentable.type = model.constants.FERMENTABLE_TYPE_GRAIN
@@ -128,18 +128,21 @@ def importBeerXMLFermentable(data):
             elif 'Adjunct' == child.text:
                 fermentable.type = model.constants.FERMENTABLE_TYPE_ADJUNCT
             else:
-                logger.warn ("Unkown fermentable type '%', assuming 'Sugar' by default", child.text)
+                logger.warn(
+                    "Unkown fermentable type '%', assuming 'Sugar' by default",
+                    child.text
+                )
                 fermentable.type = model.constants.FERMENTABLE_TYPE_SUGAR
         elif 'YIELD' == child.tag:
             fermentable.fyield = float(child.text)
         elif 'RECOMMEND_MASH' == child.tag:
             fermentable.recommendMash = child.text
         elif 'COLOR' == child.tag:
-            #ATTENTION ! le format BeerXML utilise des unités SRM !
-            #srm*1.97 =ebc
-            fermentable.color = float(child.text)*1.97
+            # ATTENTION ! le format BeerXML utilise des unités SRM !
+            # srm*1.97 =ebc
+            fermentable.color = float(child.text) * 1.97
         elif 'ADD_AFTER_BOIL' == child.tag:
-            if child.text == 'FALSE' :
+            if child.text == 'FALSE':
                 fermentable.useAfterBoil = False
             elif child.text == 'TRUE':
                 fermentable.useAfterBoil = True
@@ -151,26 +154,29 @@ def importBeerXMLHop(data):
     hop = Hop()
 
     for child in data:
-        if 'NAME' == child.tag :
+        if 'NAME' == child.tag:
             hop.name = child.text
-        elif 'AMOUNT' == child.tag :
-            hop.amount = 1000*(float(child.text))
-        elif 'FORM' == child.tag :
+        elif 'AMOUNT' == child.tag:
+            hop.amount = 1000 * (float(child.text))
+        elif 'FORM' == child.tag:
             if 'Pellet' == child.text:
                 hop.form = model.constants.HOP_FORM_PELLET
             elif 'Leaf' == child.text:
                 hop.form = model.constants.HOP_FORM_LEAF
             elif 'Plug' == child.text:
                 hop.form = model.constants.HOP_FORM_PLUG
-            else :
-                logger.warn ("Unkown hop form '%s', assuming 'Pellet' by default", child.text)
+            else:
+                logger.warn(
+                    "Unkown hop form '%s', assuming 'Pellet' by default",
+                    child.text
+                )
                 hop.form = model.constants.HOP_FORM_PELLET
-        elif 'TIME' == child.tag :
+        elif 'TIME' == child.tag:
             hop.time = float(child.text)
-        elif 'ALPHA' == child.tag :
+        elif 'ALPHA' == child.tag:
             hop.alpha = float(child.text)
         elif 'USE' == child.tag:
-            if 'Boil' == child.text :
+            if 'Boil' == child.text:
                 hop.use = model.constants.HOP_USE_BOIL
             elif 'Dry Hop' == child.text or 'Dry Hopping' == child.text:
                 hop.use = model.constants.HOP_USE_DRY_HOP
@@ -180,10 +186,13 @@ def importBeerXMLHop(data):
                 hop.use = model.constants.HOP_USE_FIRST_WORT
             elif 'Aroma' == child.text:
                 hop.use = model.constants.HOP_USE_AROMA
-            else :
-                logger.warn ("Unkown hop use '%s', assuming 'Boil' by default", child.text)
+            else:
+                logger.warn(
+                    "Unkown hop use '%s', assuming 'Boil' by default",
+                    child.text
+                )
                 hop.use = model.constants.HOP_USE_BOIL
-    
+
     return hop
 
 
@@ -199,13 +208,13 @@ def importBeerXMLMash(data):
             mash.tunTemp = child.text
         if 'SPARGE_TEMP' == child.tag:
             mash.spargeTemp = "%.1f" % float(child.text)
-        if 'PH' == child.tag :
+        if 'PH' == child.tag:
             mash.ph = "%.1f" % float(child.text)
 
     mashStep = data.findall('.//MASH_STEP')
     for element in mashStep:
         mash.listeSteps.append(importBeerXMLMashStep(element))
-    
+
     return mash
 
 
@@ -230,7 +239,7 @@ def importBeerXMLMashStep(data):
             mashStep.temp = "%.1f" % float(child.text)
         if 'INFUSE_AMOUNT' == child.tag:
             mashStep.infuseAmount = float(child.text)
-    
+
     return mashStep
 
 
@@ -238,18 +247,19 @@ def importBeerXMLMisc(data):
     misc = Misc()
 
     for child in data:
-        if 'NAME' == child.tag :
+        if 'NAME' == child.tag:
             misc.name = child.text
-        elif 'AMOUNT' == child.tag :
-            misc.amount = float(child.text)*1000
-        elif 'TYPE' == child.tag :
+        elif 'AMOUNT' == child.tag:
+            misc.amount = float(child.text) * 1000
+        elif 'TYPE' == child.tag:
             misc.type = child.text
         elif 'TIME' == child.tag:
             try:
                 misc.time = float(child.text)
             except ValueError:
                 misc.time = 0.0
-                logger.debug("misc time attribute is not numeric:%s", child.text)
+                logger.debug(
+                    "misc time attribute is not numeric:%s", child.text)
         elif 'USE' == child.tag:
             if 'Boil' == child.text:
                 misc.use = model.constants.MISC_USE_BOIL
@@ -262,7 +272,10 @@ def importBeerXMLMisc(data):
             elif 'Bottling' == child.text:
                 misc.use = model.constants.MISC_USE_BOTTLING
             else:
-                logger.warn ("Unkown misc use '%s', assuming 'Boil' by default", child.text)
+                logger.warn(
+                    "Unkown misc use '%s', assuming 'Boil' by default",
+                    child.text
+                )
                 misc.use = model.constants.MISC_USE_BOIL
 
     return misc
